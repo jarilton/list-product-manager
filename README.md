@@ -1,4 +1,4 @@
-# Product Manager — Frontend Senior Test
+# List Product Manager — Frontend 
 
 # Imagens do projeto
 <img width="1367" height="849" alt="Captura de Tela 2026-02-06 às 16 13 44" src="https://github.com/user-attachments/assets/89f98ee5-79f9-4839-bf0e-1110d907ca03" />
