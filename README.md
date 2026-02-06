@@ -1,5 +1,9 @@
 # Product Manager — Frontend Senior Test
 
+# Imagens do projeto
+<img width="1367" height="849" alt="Captura de Tela 2026-02-06 às 16 13 44" src="https://github.com/user-attachments/assets/89f98ee5-79f9-4839-bf0e-1110d907ca03" />
+
+
 Aplicação web de gerenciamento de produtos desenvolvida com **Next.js + Clean Architecture**, focada em boas práticas de engenharia de software, escalabilidade e manutenibilidade.
 
 > Este projeto foi estruturado seguindo princípios de arquitetura utilizados em ambientes de produção real.
