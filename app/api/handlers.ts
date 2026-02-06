@@ -1,7 +1,9 @@
 import { http, HttpResponse } from "msw";
-import { Product } from "../../domain/product/entities/Product";
+import { Product } from "../product/entities/Product";
 
-const products = [
+type CreateProductBody = Omit<Product, "id" | "createdAt">;
+
+const products: Product[] = [
   {
     id: "1",
     name: "Macbook Pro",
@@ -23,15 +25,18 @@ const products = [
 ];
 
 export const handlers = [
-  http.get("/products", () => {
+  http.get("http://localhost:3000/products", () => {
+    console.log("🔥 MSW interceptou GET /products");
     return HttpResponse.json(products);
   }),
 
-  http.post("/products", async ({ request }) => {
-    const body = await request.json();
+  http.post("http://localhost:3000/products", async ({ request }) => {
+    console.log("🔥 MSW interceptou POST /products");
 
-    const newProduct = {
-      ...(body as Omit<Product, "id" | "createdAt">),
+    const body = (await request.json()) as CreateProductBody;
+
+    const newProduct: Product = {
+      ...body,
       id: crypto.randomUUID(),
       createdAt: new Date(),
     };
