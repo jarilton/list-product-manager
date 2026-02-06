@@ -1,9 +1,8 @@
 "use client";
 
-import { Product } from "@/app/product/entities/Product";
-import { ProductRepository } from "@/app/product/repositories/ProductRepository";
-import { CreateProductUseCase } from "@/app/product/usecases/CreateProductUseCase";
-import { GetProductsUseCase } from "@/app/product/usecases/GetProductsUseCase";
+import { ProductRepository } from "@/app/shared/product/repositories/ProductRepository";
+import { CreateProductUseCase } from "@/app/shared/product/usecases/CreateProductUseCase";
+import { GetProductsUseCase } from "@/app/shared/product/usecases/GetProductsUseCase";
 import { useProductStore } from "@/app/store/productStore";
 import { useEffect, useMemo, useState } from "react";
 

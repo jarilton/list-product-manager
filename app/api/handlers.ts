@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { Product } from "../product/entities/Product";
+import { Product } from "../shared/product/entities/Product";
 
 type CreateProductBody = Omit<Product, "id" | "createdAt">;
 

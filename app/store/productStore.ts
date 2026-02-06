@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Product } from "../product/entities/Product";
+import { Product } from "../shared/product/entities/Product";
 
 interface ProductState {
   products: Product[];
