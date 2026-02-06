@@ -23,13 +23,13 @@ export default function Page() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [openModal, setOpenModal] = useState(false);
-  const [editing, setEditing] = useState<Product>({} as Product);
+  const [editing, setEditing] = useState<Product | null>(null);
 
   const {
     products,
     createProduct,
     editProduct,
-    deleteProduct,
+    RemoveProduct,
     search,
     setSearch,
     sort,
@@ -82,12 +82,14 @@ export default function Page() {
   }
 
   function handleSave(data: z.infer<typeof productSchema>) {
-    if (editing) {
+    if (editing !== null) {
       editProduct({ ...editing, ...data });
-      setEditing({} as Product);
     } else {
       createProduct(data);
     }
+
+    setEditing(null);
+    setOpenModal(false);
   }
 
   function handleEdit(p: Product) {
@@ -146,7 +148,7 @@ export default function Page() {
             key={p.id}
             product={p}
             onEdit={handleEdit}
-            onDelete={deleteProduct}
+            onDelete={RemoveProduct}
           />
         ))}
       </div>
@@ -156,9 +158,9 @@ export default function Page() {
         open={openModal}
         onClose={() => {
           setOpenModal(false);
-          setEditing({} as Product);
+          setEditing(null);
         }}
-        editing={editing}
+        editing={editing ?? undefined}
         onSave={handleSave}
       />
     </Container>

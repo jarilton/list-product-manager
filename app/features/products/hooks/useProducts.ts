@@ -16,7 +16,7 @@ export function useProducts(mswReady?: boolean) {
     products,
     setProducts,
     addProduct,
-    removeProduct,
+    deleteProduct,
     updateProduct,
     loading,
     setLoading,
@@ -28,7 +28,10 @@ export function useProducts(mswReady?: boolean) {
   const [sort, setSort] = useState("");
 
   async function loadProducts() {
+    if (products.length > 0) return;
+
     setLoading(true);
+
     try {
       const data = await getProductsUseCase.execute();
       setProducts(data);
@@ -48,8 +51,8 @@ export function useProducts(mswReady?: boolean) {
     addProduct(newProduct);
   }
 
-  function deleteProduct(id: string) {
-    removeProduct(id);
+  function RemoveProduct(id: string) {
+    deleteProduct(id);
   }
 
   function editProduct(product: Product) {
@@ -91,7 +94,7 @@ export function useProducts(mswReady?: boolean) {
     products: filtered,
     loading,
     createProduct,
-    deleteProduct,
+    RemoveProduct,
     editProduct,
     search,
     setSearch,

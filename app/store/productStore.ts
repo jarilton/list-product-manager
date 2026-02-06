@@ -1,34 +1,45 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { Product } from "../shared/product/entities/Product";
 
-interface ProductState {
+interface State {
   products: Product[];
   loading: boolean;
-  setProducts: (products: Product[]) => void;
-  addProduct: (product: Product) => void;
+
+  setProducts: (p: Product[]) => void;
+  addProduct: (p: Product) => void;
+  updateProduct: (p: Product) => void;
+  deleteProduct: (id: string) => void;
   setLoading: (v: boolean) => void;
-  removeProduct: (id: string) => void;
-  updateProduct: (product: Product) => void;
 }
 
-export const useProductStore = create<ProductState>((set) => ({
-  products: [],
-  loading: false,
+export const useProductStore = create<State>()(
+  persist(
+    (set) => ({
+      products: [],
+      loading: false,
 
-  setProducts: (products) => set({ products }),
+      setProducts: (products) => set({ products }),
 
-  addProduct: (product) =>
-    set((state) => ({ products: [product, ...state.products] })),
+      addProduct: (product) =>
+        set((state) => ({ products: [product, ...state.products] })),
 
-  setLoading: (v) => set({ loading: v }),
+      updateProduct: (product) =>
+        set((state) => ({
+          products: state.products.map((p) =>
+            p.id === product.id ? product : p,
+          ),
+        })),
 
-  removeProduct: (id) =>
-    set((state) => ({
-      products: state.products.filter((p) => p.id !== id),
-    })),
+      deleteProduct: (id) =>
+        set((state) => ({
+          products: state.products.filter((p) => p.id !== id),
+        })),
 
-  updateProduct: (product) =>
-    set((state) => ({
-      products: state.products.map((p) => (p.id === product.id ? product : p)),
-    })),
-}));
+      setLoading: (v) => set({ loading: v }),
+    }),
+    {
+      name: "products-storage",
+    },
+  ),
+);
