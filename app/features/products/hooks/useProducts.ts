@@ -47,18 +47,16 @@ export function useProducts() {
   const filtered = useMemo(() => {
     let result = [...products];
 
-    if (search) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
+    if (search.trim() !== "") {
+      const term = search.toLowerCase().trim();
 
-    if (minPrice) {
-      result = result.filter((p) => p.price >= Number(minPrice));
-    }
+      result = result.filter((p) => {
+        const nameMatch = p.name.toLowerCase().includes(term);
 
-    if (maxPrice) {
-      result = result.filter((p) => p.price <= Number(maxPrice));
+        const priceMatch = p.price.toString().toLowerCase().includes(term);
+
+        return nameMatch || priceMatch;
+      });
     }
 
     if (sort === "price_asc") {
@@ -70,7 +68,7 @@ export function useProducts() {
     }
 
     return result;
-  }, [products, search, minPrice, maxPrice, sort]);
+  }, [products, search, sort]);
 
   return {
     products: filtered,
