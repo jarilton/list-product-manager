@@ -185,7 +185,7 @@ tests/Home.test.tsx
 Executar:
 
 ```bash
-yarn jest
+yarn test
 ```
 
 # 🧠 Decisões técnicas
