@@ -1,37 +1,219 @@
-# Product Manager - Senior Frontend Test
+# Product Manager — Frontend Senior Test
 
-## Tech stack
+Aplicação web de gerenciamento de produtos desenvolvida com **Next.js + Clean Architecture**, focada em boas práticas de engenharia de software, escalabilidade e manutenibilidade.
 
-- Next.js 14
-- TypeScript (strict)
-- Tailwind
-- Zustand
-- MSW (mock API)
-- Clean Architecture
+> Este projeto foi estruturado seguindo princípios de arquitetura utilizados em ambientes de produção real.
 
-## Architecture decisions
+---
 
-Project structured using Clean Architecture principles:
+# Stack utilizada
 
-- domain → business rules
-- infra → API communication
-- features → UI and hooks
-- store → global state
-- shared → design system
+- **Next.js 15+ (App Router)**
+- **TypeScript**
+- **Zustand (state management)**
+- **MSW (Mock Service Worker)**
+- **Tailwind CSS**
+- **Zod (validação)**
+- **Clean Architecture**
+- **Design System próprio**
 
-This separation ensures scalability, maintainability and testability.
+# Arquitetura
 
-## Features
+O projeto segue **Clean Architecture + Feature First**, separando responsabilidades em camadas:
 
-- Product listing
-- Create product
-- Filtering by name and price
-- Sorting
-- Responsive layout
-- Global state
-- Snapshot test
+```
+app/
+ ├ domain/        → regras de negócio
+ ├ infra/         → comunicação externa (api/msw)
+ ├ features/      → lógica por feature
+ ├ shared/        → design system + utils
+ ├ store/         → estado global
+```
 
-## Run project
+### Camadas
 
-yarn install  
-yarn dev
+**Domain**
+
+- Entidades
+- Use cases
+- Interfaces de repositório
+
+**Infra**
+
+- Implementações de API
+- MSW mock server
+
+**Features**
+
+- Hooks da feature
+- Schemas (Zod)
+- Componentes específicos
+
+**Shared**
+
+- Design system
+- Componentes reutilizáveis
+- Modal system
+- Cards
+- Inputs
+
+# Funcionalidades
+
+### Produtos
+
+- Listagem
+- Criação
+- Edição
+- Remoção com confirmação
+- Busca por nome e preço
+- Ordenação
+- Persistência local
+
+### UX/UI
+
+- Modal com blur e animação
+- Toast feedback
+- Validação com Zod
+- Design system consistente
+- Responsivo
+
+# Estratégia de API (Arquitetura Profissional)
+
+Este projeto utiliza uma abordagem híbrida:
+
+## Desenvolvimento local
+
+Utiliza **MSW (Mock Service Worker)**
+Intercepta requisições HTTP simulando backend real.
+
+Vantagens:
+
+- Não depende de backend
+- Testável
+- Isolado
+- Simula latência
+
+## Produção (Vercel)
+
+Utiliza **Next API Routes** como fake backend.
+
+Isso permite:
+
+- Deploy funcional sem backend real
+- Mesmo contrato de API
+- Fácil substituição por backend real futuro
+
+# Gerenciamento de Estado
+
+Utilizado **Zustand com persistência**:
+
+- Estado global de produtos
+- Persistência em localStorage
+- Sincronização com API mock
+
+Motivo da escolha:
+
+- Simples
+- Performático
+- Escalável
+- Menos boilerplate que Redux
+
+# Design System
+
+Componentes reutilizáveis:
+
+- Button
+- Input
+- Modal
+- Card
+- ProductCard
+- ConfirmModal
+
+Princípios:
+
+- Single Responsibility
+- Reutilização
+- Consistência visual
+- Fácil manutenção
+
+# Validação
+
+Utilizado **Zod**
+
+Motivos:
+
+- Tipagem segura
+- Integração com TS
+- Mensagens claras
+- Validação client-side robusta
+
+# 📦 Como rodar o projeto
+
+```bash
+yarn install
+ysrn dev
+```
+
+Abrir:
+
+```
+http://localhost:3000
+```
+
+# Testes
+
+Exemplo de snapshot test incluso:
+
+```
+tests/Home.test.tsx
+```
+
+Executar:
+
+```bash
+yarn jest
+```
+
+# 🧠 Decisões técnicas
+
+### Por que Clean Architecture?
+
+Separação clara de responsabilidades
+Facilita testes e manutenção
+Escalável para backend real
+
+### Por que MSW?
+
+Permite desenvolvimento desacoplado
+Simula backend real
+Padrão usado em empresas grandes
+
+### Por que Zustand?
+
+Menos boilerplate
+Alta performance
+Escalável
+Persistência simples
+
+### Por que Next App Router?
+
+SSR ready
+Escalável
+Padrão moderno React
+
+#### Foco em:
+
+- Arquitetura escalável
+- Código limpo
+- Experiência do usuário
+- Boas práticas de mercado
+
+# Conclusão
+
+Este projeto demonstra:
+
+- Capacidade de arquitetura frontend
+- Organização de código profissional
+- Domínio de React/Next
+- Boas práticas de engenharia
+- Pensamento de produto

@@ -26,12 +26,12 @@ const products: Product[] = [
 
 export const handlers = [
   http.get("/api/products", () => {
-    console.log("🔥 MSW interceptou GET /api/products");
+    console.log("MSW interceptou GET /api/products");
     return HttpResponse.json(products);
   }),
 
   http.post("/api/products", async ({ request }) => {
-    console.log("🔥 MSW interceptou POST /api/products");
+    console.log("MSW interceptou POST /api/products");
 
     const body = (await request.json()) as CreateProductBody;
 
