@@ -1,5 +1,6 @@
 "use client";
 
+import { Product } from "@/app/shared/product/entities/Product";
 import { ProductRepository } from "@/app/shared/product/repositories/ProductRepository";
 import { CreateProductUseCase } from "@/app/shared/product/usecases/CreateProductUseCase";
 import { GetProductsUseCase } from "@/app/shared/product/usecases/GetProductsUseCase";
@@ -10,9 +11,16 @@ const repo = new ProductRepository();
 const getProductsUseCase = new GetProductsUseCase(repo);
 const createProductUseCase = new CreateProductUseCase(repo);
 
-export function useProducts() {
-  const { products, setProducts, addProduct, loading, setLoading } =
-    useProductStore();
+export function useProducts(mswReady?: boolean) {
+  const {
+    products,
+    setProducts,
+    addProduct,
+    removeProduct,
+    updateProduct,
+    loading,
+    setLoading,
+  } = useProductStore();
 
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
@@ -40,9 +48,18 @@ export function useProducts() {
     addProduct(newProduct);
   }
 
+  function deleteProduct(id: string) {
+    removeProduct(id);
+  }
+
+  function editProduct(product: Product) {
+    updateProduct(product);
+  }
+
   useEffect(() => {
+    if (!mswReady) return;
     loadProducts();
-  }, []);
+  }, [mswReady]);
 
   const filtered = useMemo(() => {
     let result = [...products];
@@ -74,6 +91,8 @@ export function useProducts() {
     products: filtered,
     loading,
     createProduct,
+    deleteProduct,
+    editProduct,
     search,
     setSearch,
     minPrice,

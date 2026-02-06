@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProducts } from "./features/products/hooks/useProducts";
 import { Container } from "./shared/components/Container";
-import { Card } from "./shared/components/Card";
 import { Input } from "./shared/components/Input";
 import { Button } from "./shared/components/Button";
 import toast from "react-hot-toast";
 import { productSchema } from "./features/products/schemas/productSchema";
 import { z } from "zod";
+import { ProductCard } from "./shared/components/ProductCard";
+import { Product } from "./shared/product/entities/Product";
+import { ModalProduct } from "./shared/components/ModalProduct";
 
 export default function Page() {
-  const { products, createProduct, search, setSearch, sort, setSort } =
-    useProducts();
-
+  const [mswReady, setMswReady] = useState(false);
   const [form, setForm] = useState({
     name: "",
     category: "",
@@ -21,8 +21,20 @@ export default function Page() {
     description: "",
     imageUrl: "",
   });
-
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [openModal, setOpenModal] = useState(false);
+  const [editing, setEditing] = useState<Product>({} as Product);
+
+  const {
+    products,
+    createProduct,
+    editProduct,
+    deleteProduct,
+    search,
+    setSearch,
+    sort,
+    setSort,
+  } = useProducts(mswReady);
 
   async function handleCreate() {
     try {
@@ -69,59 +81,46 @@ export default function Page() {
     }
   }
 
+  function handleSave(data: z.infer<typeof productSchema>) {
+    if (editing) {
+      editProduct({ ...editing, ...data });
+      setEditing({} as Product);
+    } else {
+      createProduct(data);
+    }
+  }
+
+  function handleEdit(p: Product) {
+    setEditing(p);
+    setOpenModal(true);
+  }
+
+  useEffect(() => {
+    async function init() {
+      if (process.env.NODE_ENV === "development") {
+        const { worker } = await import("../app/infra/mocks/browser"); // ajuste path
+        await worker.start({
+          onUnhandledRequest: "bypass",
+        });
+
+        console.log("🟢 MSW STARTED");
+      }
+
+      setMswReady(true);
+    }
+
+    init();
+  }, []);
+
   return (
     <Container>
-      <h1 className="text-3xl font-bold mb-6">Gerenciador de Produtos</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold mb-6">Gerenciador de Produtos</h1>
+        <Button onClick={() => setOpenModal(true)} variant="secondary">
+          Novo produto
+        </Button>
+      </div>
 
-      {/* CREATE */}
-      <Card>
-        <h2 className="font-semibold mb-4">Criar Produto</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Input
-            placeholder="Nome"
-            value={form.name}
-            error={errors.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-
-          <Input
-            placeholder="Categoria"
-            value={form.category}
-            error={errors.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
-          />
-
-          <Input
-            placeholder="Preço"
-            type="number"
-            value={form.price}
-            error={errors.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-          />
-
-          <Input
-            placeholder="URL imagem"
-            value={form.imageUrl}
-            error={errors.imageUrl}
-            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-          />
-        </div>
-
-        <Input
-          placeholder="Descrição"
-          className="mt-3"
-          value={form.description}
-          error={errors.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-        />
-
-        <div className="flex justify-end mt-4">
-          <Button onClick={handleCreate}>Adicionar Produto</Button>
-        </div>
-      </Card>
-
-      {/* BUSCA UNICA */}
       <div className="flex gap-3 mt-6">
         <Input
           placeholder="Buscar por nome ou preço..."
@@ -141,24 +140,27 @@ export default function Page() {
         </select>
       </div>
 
-      {/* LIST */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {products.map((p) => (
-          <Card key={p.id}>
-            <img
-              src={p.imageUrl}
-              className="w-full h-40 object-cover rounded-xl mb-2"
-            />
-
-            <h3 className="font-bold text-lg">{p.name}</h3>
-            <p className="text-sm text-zinc-500">{p.category}</p>
-
-            <p className="font-semibold mt-2 text-green-600">R$ {p.price}</p>
-
-            <p className="text-sm mt-2 text-zinc-600">{p.description}</p>
-          </Card>
+          <ProductCard
+            key={p.id}
+            product={p}
+            onEdit={handleEdit}
+            onDelete={deleteProduct}
+          />
         ))}
       </div>
+
+      <ModalProduct
+        key={editing?.id ?? "new"}
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+          setEditing({} as Product);
+        }}
+        editing={editing}
+        onSave={handleSave}
+      />
     </Container>
   );
 }

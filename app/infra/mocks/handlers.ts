@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { Product } from "../shared/product/entities/Product";
+import { Product } from "../../shared/product/entities/Product";
 
 type CreateProductBody = Omit<Product, "id" | "createdAt">;
 
@@ -25,13 +25,13 @@ const products: Product[] = [
 ];
 
 export const handlers = [
-  http.get("http://localhost:3000/products", () => {
-    console.log("🔥 MSW interceptou GET /products");
+  http.get("/api/products", () => {
+    console.log("🔥 MSW interceptou GET /api/products");
     return HttpResponse.json(products);
   }),
 
-  http.post("http://localhost:3000/products", async ({ request }) => {
-    console.log("🔥 MSW interceptou POST /products");
+  http.post("/api/products", async ({ request }) => {
+    console.log("🔥 MSW interceptou POST /api/products");
 
     const body = (await request.json()) as CreateProductBody;
 
