@@ -3,6 +3,16 @@
 # Imagens do projeto
 <img width="1367" height="849" alt="Captura de Tela 2026-02-06 às 16 13 44" src="https://github.com/user-attachments/assets/89f98ee5-79f9-4839-bf0e-1110d907ca03" />
 
+<img width="1318" height="863" alt="Captura de Tela 2026-02-06 às 16 15 19" src="https://github.com/user-attachments/assets/a15dab5a-3f9d-4ba0-9503-159d183cdd58" />
+
+<img width="1365" height="790" alt="Captura de Tela 2026-02-06 às 16 16 27" src="https://github.com/user-attachments/assets/28af4dda-9108-4ef2-8fad-09e00ccaa305" />
+
+<img width="447" height="907" alt="Captura de Tela 2026-02-06 às 16 16 53" src="https://github.com/user-attachments/assets/32043986-5ac2-4d20-8bb2-f2227156f30e" />
+
+<img width="1318" height="813" alt="Captura de Tela 2026-02-06 às 16 17 18" src="https://github.com/user-attachments/assets/ca15473e-2375-4061-96ed-fa3ccfd5d59b" />
+
+<img width="1046" height="763" alt="Captura de Tela 2026-02-06 às 16 17 50" src="https://github.com/user-attachments/assets/c01e7106-be19-430d-8eef-ead8b71b2faa" />
+
 
 Aplicação web de gerenciamento de produtos desenvolvida com **Next.js + Clean Architecture**, focada em boas práticas de engenharia de software, escalabilidade e manutenibilidade.
 
