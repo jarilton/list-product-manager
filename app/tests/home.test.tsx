@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import Page from "@/src/app/page";
+import Page from "@/app/page";
 
 describe("Home snapshot", () => {
   it("should match snapshot", () => {
