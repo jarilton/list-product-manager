@@ -11,19 +11,14 @@ import { z } from "zod";
 import { ProductCard } from "./shared/components/ProductCard";
 import { Product } from "./shared/product/entities/Product";
 import { ModalProduct } from "./shared/components/ModalProduct";
+import { ModalConfirmDelete } from "./shared/components/ModalConfirmDelete";
 
 export default function Page() {
   const [mswReady, setMswReady] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    category: "",
-    price: "",
-    description: "",
-    imageUrl: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const {
     products,
@@ -35,51 +30,6 @@ export default function Page() {
     sort,
     setSort,
   } = useProducts(mswReady);
-
-  async function handleCreate() {
-    try {
-      setErrors({});
-
-      const parsed = productSchema.parse({
-        ...form,
-        price: Number(form.price),
-      });
-
-      await createProduct(parsed);
-
-      toast.success("Produto criado com sucesso 🚀");
-
-      setForm({
-        name: "",
-        category: "",
-        price: "",
-        description: "",
-        imageUrl: "",
-      });
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const fieldErrors: Record<string, string> = {};
-
-        if (err instanceof z.ZodError) {
-          const fieldErrors: Record<string, string> = {};
-
-          err.issues.forEach((e) => {
-            if (e.path[0]) {
-              fieldErrors[e.path[0] as string] = e.message;
-            }
-          });
-
-          setErrors(fieldErrors);
-          return;
-        }
-
-        setErrors(fieldErrors);
-        return;
-      }
-
-      toast.error("Erro ao criar produto");
-    }
-  }
 
   function handleSave(data: z.infer<typeof productSchema>) {
     if (editing !== null) {
@@ -95,6 +45,20 @@ export default function Page() {
   function handleEdit(p: Product) {
     setEditing(p);
     setOpenModal(true);
+  }
+
+  function handleAskDelete(product: Product) {
+    setProductToDelete(product);
+    setDeleteOpen(true);
+  }
+
+  function handleConfirmDelete() {
+    if (!productToDelete) return;
+
+    RemoveProduct(productToDelete.id);
+    setProductToDelete(null);
+
+    toast.success("Produto removido");
   }
 
   useEffect(() => {
@@ -148,7 +112,7 @@ export default function Page() {
             key={p.id}
             product={p}
             onEdit={handleEdit}
-            onDelete={RemoveProduct}
+            onDelete={() => handleAskDelete(p)}
           />
         ))}
       </div>
@@ -162,6 +126,13 @@ export default function Page() {
         }}
         editing={editing ?? undefined}
         onSave={handleSave}
+      />
+
+      <ModalConfirmDelete
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={handleConfirmDelete}
+        productName={productToDelete?.name}
       />
     </Container>
   );
